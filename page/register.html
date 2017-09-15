@@ -1,0 +1,120 @@
+<html>
+<head>
+<script src='https://cdn.firebase.com/js/client/2.2.1/firebase.js'></script>
+    <script src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js'></script>
+</head>
+<body>
+<form name='registration' onSubmit="return check();">    
+
+
+<li><label for="username">Username:</label> </li> 
+<li><input type="text" id="username" size="12" /> </li>
+
+<li><label for="name">Name:</label>  </li>
+<li><input type="text" id="name" size="20" /> </li> 
+
+<li><label for="email">Email:</label></li>
+<li><input type="text" id="email" size="40" /></li>
+
+<li><label for="passid">Password:</label>  </li>
+<li><input type="password" id="passid" size="12" /> </li>
+
+<li><label for="age">Age:</label>  </li>
+<li><input type="text" id="age" size="3" /></li> 
+
+<input type="button" value="Back" onClick="location.href='../main.html'" />
+<input type="button" value="Submit" onClick="check();" />
+
+</form>
+</body>
+<script>   
+
+function check(){
+    
+var uid = document.registration.username;  
+var passid = document.registration.passid;  
+var uname = document.registration.name;  
+var uemail = document.registration.email;  
+var uage = document.registration.age; 
+
+if(userid_check(uid,5,12)){
+if(name_check(uname)){
+if(email_check(uemail)){
+if(passid_check(passid,6,12)){
+if(age_check(uage)){
+} } } } }
+    return false;
+} 
+
+function userid_check(uid,mx,my)  
+{  
+var uid_len = uid.value.length;  
+if (uid_len == 0 || uid_len >= my || uid_len < mx)  
+{  
+alert("Username should not be empty / length be between "+mx+" to "+my);  
+uid.focus();  
+return false;  
+}  
+return true;  
+}  
+function passid_check(passid,mx,my)  
+{  
+var passid_len = passid.value.length;  
+if (passid_len == 0 ||passid_len >= my || passid_len < mx)  
+{  
+alert("Password should not be empty / length be between "+mx+" to "+my);  
+passid.focus();  
+return false;  
+}  
+return true;  
+}  
+function name_check(uname)  
+{   
+var letters = /^[A-Za-z]+$/;  
+if(uname.value.match(letters))  
+{  
+return true;  
+}  
+else  
+{  
+alert('Name must have alphabet characters only');  
+uname.focus();  
+return false;  
+}  
+} 
+function email_check(uemail){  
+var mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;  
+if(uemail.value.match(mailformat)){  
+return true;  
+}else{  
+alert("You have entered an invalid email address!");  
+uemail.focus();  
+return false;  
+}  
+} 
+
+function age_check(uage) {  
+  var num = uage.value;
+    
+  if(num >1 && num<150){  
+
+          var myDataRef = new Firebase('https://vivid-torch-8167.firebaseio.com/');
+          var username = $('#username').val();
+          var name = $('#name').val();
+          var email = $('#email').val();
+          var passid = $('#passid').val();
+          var age = parseInt($('#age').val());
+          myDataRef.push({username: username, name: name, email:email, passid:passid, age:age});
+          alert("Succesfully"); 
+            
+        location.href='logged.html'
+        
+return true;
+}else{
+  alert('Incorrent Age');
+ return false;  
+} 
+}
+
+</script>
+</html>

@@ -1,0 +1,108 @@
+<html>
+<head>
+    <script src='https://cdn.firebase.com/js/client/2.2.1/firebase.js'></script>
+    <script src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js'></script>
+</head>
+<body>
+<form>    
+
+<li><label for="recipe">Recipe</label>  </li> 
+<li><input type="text" id="recipe" size="12" />  </li> 
+
+<li><label for="content">Content:</label>  </li>
+<li><input type="text" id="content" size="20" /> </li> 
+
+<li><label for="comment">Comment:</label></li>
+<li><input type="text" id="comment" size="40" /></li>
+
+
+<input type="button" value="Back" onClick="location.href='../main.html'" />
+
+<input type="button" value="Submit" onClick="push();" /><br/>
+
+<input type="button" value="Modify" onClick="mod();" />
+<label for="comment">Input the Recipe Name On Top</label>
+</form>
+
+
+<label for="username">Input The Recipe Name</label>
+<input type="text" id="delete"/> 
+<input type="button" value="Delete" onClick="de();" />
+
+
+
+<div id='messagesDiv'></div>
+</body>
+    
+    <script>
+        
+        
+      
+       var myDataRef = new Firebase('https://recipe-922be.firebaseio.com/');
+      
+        myDataRef.on('child_added', function(snapshot) {
+        var message = snapshot.val();
+        displayChatMessage(message.recipe, message.content, message.comment);
+      });
+      function displayChatMessage(recipe, content, comment, key) {
+        $('<div/>').text(key).prepend($('<em/>').text('Recipe:'+recipe+', Content:'+content+', Comment:'+comment+'')).appendTo($('#messagesDiv'));
+        $('#messagesDiv')[0].scrollTop = $('#messagesDiv')[0].scrollHeight;
+      };
+      
+   
+   function push(){
+        //input the data 
+        var recipe = $('#recipe').val();
+        var content = $('#content').val();
+        var comment = $('#comment').val();
+        myDataRef.push({recipe: recipe, content: content, comment:comment});
+        
+   }
+
+        function de(){
+            
+            myDataRef.once("value", function(snapshot) {
+            snapshot.forEach(function(childSnapshot) {
+            var key = childSnapshot.key();
+            var childData = childSnapshot.val();
+       	
+		if(document.getElementById("delete").value == childData.recipe){
+				
+			    //delete the key
+                myDataRef.child(key).remove();
+            
+			    alert("Succesfully");
+			    
+			    //reload the page
+			    location.reload()
+		    } 
+		    
+		    
+		});
+	});
+   }
+  function mod(){
+      
+        myDataRef.once("value", function(snapshot) {
+        snapshot.forEach(function(childSnapshot) {
+        var key = childSnapshot.key();
+        var childData = childSnapshot.val(); 
+            
+            if(document.getElementById("recipe").value == childData.recipe){
+             
+                myDataRef.child(key).remove();
+                var recipe = $('#recipe').val();
+                var content = $('#content').val();
+                var comment = $('#comment').val();
+                myDataRef.push({recipe: recipe, content: content, comment:comment});
+               
+                location.reload()
+            }
+        });
+	});
+  }
+   
+   
+    </script>
+
+</html>

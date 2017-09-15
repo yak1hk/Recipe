@@ -1,0 +1,60 @@
+<html>
+  <head>
+    <script src='https://cdn.firebase.com/js/client/2.2.1/firebase.js'></script>
+    <script src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js'></script>
+  </head>
+  <body>
+
+	<label for="word">Search:</label>
+	<input type="text" id="search" />
+  	<input type="button" value="Search" onClick="search()" /><br />
+  	<input type="button" value="modify" onClick="location.href='modify.html'" />
+  	<input type="button" value="logout" onClick="location.href='../main.html'" />
+  	
+    <div id='messagesDiv'></div>
+    
+    
+    <div id='reci'></div>
+    <div id='cont'></div>
+    <div id='comm'></div>
+  </body>
+    <script>
+      
+     var myDataRef = new Firebase('https://recipe-922be.firebaseio.com/');
+      
+      myDataRef.on('child_added', function(snapshot) {
+        var message = snapshot.val();
+        displayChatMessage(message.recipe, message.content, message.comment);
+      });
+      function displayChatMessage(recipe, content, comment) {
+        $('<div/>').text(comment).prepend($('<em/>').text('Recipe:'+recipe+', Content:'+content+', Comment:')).appendTo($('#messagesDiv'));
+        $('#messagesDiv')[0].scrollTop = $('#messagesDiv')[0].scrollHeight;
+      };
+      
+  
+   function search(){
+     
+      myDataRef.once("value", function(snapshot) {
+      snapshot.forEach(function(childSnapshot) {
+      var childData = childSnapshot.val();
+       	
+		if(document.getElementById("search").value == childData.recipe){
+     
+  
+        document.getElementById("reci").innerHTML = "Recipe "+childData.recipe;
+        document.getElementById("cont").innerHTML = "Content "+childData.content;
+        document.getElementById("comm").innerHTML = "Comment "+childData.comment;
+        
+       	
+    alert("Succesfully");
+    		} 
+
+		  });
+	  });
+  }
+   
+   
+   
+   
+    </script>
+</html>

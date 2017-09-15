@@ -1,0 +1,88 @@
+<html>
+  <head>
+    <script src='https://cdn.firebase.com/js/client/2.2.1/firebase.js'></script>
+    <script src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js'></script>
+  </head>
+  <body>
+   
+    
+	<label for="username">Username:</label>
+	<input type="text" id="user" /><br />
+	<label for="passid">Password:</label>
+	<input type="password" id="pass" /><br />
+	<input type="button" value="Login" onClick="login();" />
+	<input type="button" value="Register" onClick="location.href='page/register.html'" /><br />
+	
+	
+
+	<label for="word">Full name of the recipe:</label>
+	<input type="text" id="search" />
+  	<input type="button" value="Search" onClick="search()"/>
+    <div id='messagesDiv'></div><br />
+  <form> 
+    <div id='reci'> </div>
+    <div id='cont'> </div>
+    <div id='comm'> </div>
+  </form> 
+  </body>
+    <script>
+      
+      var myDataRef = new Firebase('https://recipe-922be.firebaseio.com/');
+      
+      
+        myDataRef.on('child_added', function(snapshot) {
+        var message = snapshot.val();
+        displayChatMessage(message.recipe, message.content, message.comment);
+      });
+      function displayChatMessage(recipe, content, comment, key) {
+        $('<div/>').text(key).prepend($('<em/>').text('Recipe:'+recipe+', Content:'+content+', Comment:'+comment+'')).appendTo($('#messagesDiv'));
+        $('#messagesDiv')[0].scrollTop = $('#messagesDiv')[0].scrollHeight;
+      };
+      
+      
+      
+      function login(){
+      	var myDataRef = new Firebase('https://vivid-torch-8167.firebaseio.com/');
+      	
+      	myDataRef.once("value", function(snapshot) {
+       	snapshot.forEach(function(childSnapshot) {
+       	var childData = childSnapshot.val()
+       	
+		if(document.getElementById("user").value == childData.username){
+			if(document.getElementById("pass").value == childData.passid){
+				alert("You have logged in");
+				location.href='page/logged.html';
+				document.getElementById("result").innerHTML = "You have logged into "+childData.username;	
+			  }
+		  }
+    });
+	});
+}
+
+   function search(){
+     
+      var myDataRef = new Firebase('https://recipe-922be.firebaseio.com/');
+     
+      myDataRef.once("value", function(snapshot) {
+      snapshot.forEach(function(childSnapshot) {
+      var childData = childSnapshot.val();
+       	
+		if(document.getElementById("search").value == childData.recipe){
+     
+  
+        document.getElementById("reci").innerHTML = "Recipe: "+childData.recipe;
+        document.getElementById("cont").innerHTML = "Content: "+childData.content;
+        document.getElementById("comm").innerHTML = "Comment: "+childData.comment;
+        
+       	
+    alert("Succesfully");
+    		} 
+
+		  });
+	  });
+  }
+   
+   
+  
+    </script>
+</html>
